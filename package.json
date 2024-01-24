@@ -26,6 +26,7 @@
     "init-msw": "msw init public/"
   },
   "devDependencies": {
+    "@storybook/addon-a11y": "^7.6.10",
     "@storybook/addon-essentials": "^7.6.6",
     "@storybook/addon-interactions": "^7.6.6",
     "@storybook/addon-links": "^7.6.6",
@@ -40,6 +41,7 @@
     "msw-storybook-addon": "^1.10.0",
     "prop-types": "^15.8.1",
     "storybook": "^7.6.6",
+    "typescript": "^5.3.3",
     "vite": "^4.2.0"
   },
   "resolutions": {
