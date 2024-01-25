@@ -1,22 +1,33 @@
 import React from "react";
+import Task from "../Task/Task";
+import { useDispatch, useSelector } from "react-redux";
+import { updateTaskState, IRootState } from "../../lib/store";
 
-import Task, { Task as TaskType } from "../Task/Task";
+export default function TaskList() {
+  // We're retrieving our state from the store
+  const tasks = useSelector((state: IRootState) => {
+    const tasksInOrder = [
+      ...state.taskbox.tasks.filter((t) => t.state === "TASK_PINNED"),
+      ...state.taskbox.tasks.filter((t) => t.state !== "TASK_PINNED"),
+    ];
+    console.log(tasksInOrder);
+    const filteredTasks = tasksInOrder.filter(
+      (t) => t.state === "TASK_INBOX" || t.state === "TASK_PINNED"
+    );
+    return filteredTasks;
+  });
 
-interface TaskListType {
-  loading: boolean;
-  tasks: Array<TaskType>;
-  onPinTask: () => void;
-  onArchiveTask: () => void;
-}
-export default function TaskList({
-  loading,
-  tasks,
-  onPinTask,
-  onArchiveTask,
-}: TaskListType) {
-  const events = {
-    onPinTask,
-    onArchiveTask,
+  const { status } = useSelector((state: IRootState) => state.taskbox);
+
+  const dispatch = useDispatch();
+
+  const pinTask = (value) => {
+    // We're dispatching the Pinned event back to our store
+    dispatch(updateTaskState({ id: value, newTaskState: "TASK_PINNED" }));
+  };
+  const archiveTask = (value) => {
+    // We're dispatching the Archive event back to our store
+    dispatch(updateTaskState({ id: value, newTaskState: "TASK_ARCHIVED" }));
   };
   const LoadingRow = (
     <div className="loading-item">
@@ -26,8 +37,7 @@ export default function TaskList({
       </span>
     </div>
   );
-
-  if (loading) {
+  if (status === "loading") {
     return (
       <div className="list-items" data-testid="loading" key={"loading"}>
         {LoadingRow}
@@ -39,7 +49,6 @@ export default function TaskList({
       </div>
     );
   }
-
   if (tasks.length === 0) {
     return (
       <div className="list-items" key={"empty"} data-testid="empty">
@@ -51,14 +60,16 @@ export default function TaskList({
       </div>
     );
   }
-  const tasksInOrder = [
-    ...tasks.filter((t) => t.task.state === "TASK_PINNED"),
-    ...tasks.filter((t) => t.task.state !== "TASK_PINNED"),
-  ];
+
   return (
-    <div className="list-items">
-      {tasksInOrder.map((eachTask) => (
-        <Task key={eachTask.task.id} task={eachTask.task} {...events} />
+    <div className="list-items" data-testid="success" key={"success"}>
+      {tasks.map((task) => (
+        <Task
+          key={task.id}
+          task={task}
+          onPinTask={(task) => pinTask(task)}
+          onArchiveTask={(task) => archiveTask(task)}
+        />
       ))}
     </div>
   );
