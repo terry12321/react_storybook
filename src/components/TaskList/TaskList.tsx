@@ -10,6 +10,7 @@ export default function TaskList() {
       ...state.taskbox.tasks.filter((t) => t.state === "TASK_PINNED"),
       ...state.taskbox.tasks.filter((t) => t.state !== "TASK_PINNED"),
     ];
+    console.log(tasksInOrder);
     const filteredTasks = tasksInOrder.filter(
       (t) => t.state === "TASK_INBOX" || t.state === "TASK_PINNED"
     );
