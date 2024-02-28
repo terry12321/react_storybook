@@ -2,16 +2,18 @@ import React, { useEffect } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import { IRootState, fetchTasks } from "../../lib/store";
+import { IRootState, fetchTasks, AppDispatch } from "../../lib/store";
 import TaskList from "../TaskList/Tasklist";
+import { AsyncThunkAction } from "@reduxjs/toolkit";
+import { AsyncThunkConfig } from "@reduxjs/toolkit/dist/createAsyncThunk";
 
 export default function InboxScreen() {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   // We're retrieving the error field from our updated store
   const { error } = useSelector((state: IRootState) => state.taskbox);
   // The useEffect triggers the data fetching when the component is mounted
   useEffect(() => {
-    dispatch();
+    dispatch(fetchTasks());
   }, []);
 
   if (error) {
